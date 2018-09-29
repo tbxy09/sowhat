@@ -1,4 +1,4 @@
-using pandoc to create a onepage look for my vimwiki diary
+### using pandoc to create a onepage look for my vimwiki diary
 I am struggling for lazy reviewing my diary quit time,finally,onepage is the most comfort way for me.
 
 - use bash command to create a md file including all
@@ -6,7 +6,14 @@ I am struggling for lazy reviewing my diary quit time,finally,onepage is the mos
 cat *.md > all.md
 ```
 
-- create a makefile for coveting  md to html using pandoc
+- create a makefile for coveting  md to html using pandoc, run make under my folder including all the files I want to convert
+
+
+```
+make
+```
+
+
 
 this is what I found for the base line almost working(except some changes to the
 dated option *-- smart* ) thank to
