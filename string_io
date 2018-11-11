@@ -1,0 +1,38 @@
+#!/home/.tbxy09/anaconda/envs/patent-landscape/bin/python
+import sys
+import time
+import json
+
+# f=open('./test.md')
+# string_io=open('./test.md').read
+# string_io=f.readline()
+# string_io=f.readline()
+# string_io=f.readline()
+# string_io=open('./test.md').readline()
+# sys.stdin
+# with open('./test.md','r') as f:
+
+with open('./test.md','r') as f:
+    # for line in iter(f.readline,'t\n'.encode()):
+    # for line in iter(f.readline,b't\n'.decode()):
+    line_list=[]
+    for line in sys.stdin:
+        # try:
+        #     json_data=json.load(line)
+        # # except:
+        # #     print("error")
+        # except Exception as e:
+        #     # self._make_debug_exception(e, code)
+        #     print(e)
+        #     raise
+        line_list.append(line)
+    # for line in sys.stdout:
+    # for line in f:
+        # if line.strip('\n'):
+        # print('x' in line.decode())
+        # print('x' in line)
+        time.sleep(0.5)
+    # print(int(sys.argv[1]))
+    print(line_list[int(sys.argv[1])])
+# print('success')
+# print(string_io)

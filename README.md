@@ -94,6 +94,8 @@ fab is a python package you used to manage the web server resources, it use ssh 
 * NOT SATISFIED
 
 1. the traceback err report not working when running the fab,it just hang there
+refer to
+[issueTracking](##issueTracking)
 
 2. it will become a huge file, including multiple task, maybe hard debug later, how to make it able to contain multiple task, and at the same time, clear interface to make debug easier
 
@@ -107,6 +109,44 @@ so every time I want to publish it to the git, I just run the fab cli command:
 
 	fab setup_regular_task
 
+should add more exception handler
 
 
 
+## host remote, db remote connection
+
+the ongoing project is to setup a platform for quick computation, and memory,storage deploy,现在所有的计算都是一个多核的计算,多核的内存和存储管理。
+
+the right now frame work, fab + tencent_cloud_api+aliyun_cloud_api
+
+but keep a stable, error traceable,is the main requirement
+
+[连接侧漏](https://github.com/alibaba/druid/wiki/%E8%BF%9E%E6%8E%A5%E6%B3%84%E6%BC%8F%E7%9B%91%E6%B5%db)
+
+## issueTracking
+
+using the step debugger pudb to run the *fabfile.py*, instead of run the cli *fab*
+
+	python -m pudb fabfile.py
+
+when running the this line
+
+	from fabric.api import cd, lcd, env, local,serial
+
+it hang about more than 60 seconds sometime
+
+turns out, this line will import tons of modules including *pynacl*,then refer this issue to [pynacl #327](https://github.com/pyca/pynacl/issues/327)
+
+this has a more detail description [libsodium-php94](https://github.com/jedisct1/libsodium-php/issues/94)
+
+## Test the tencent_cloud_api
+
+this command line is to pretty print the response json from tencent cloud. I am now debug the request to the cloud service,it will fetch the json data from the response mixed with other state report data, then print out in the shell
+
+	python test_api.py|string_io 0|python -m json.tool
+
+and if you want to print out to webpage, and you can add the following line
+
+	python test_api.py|string_io 0|python -m json.tool|aha > ls_with_color.html
+
+string_io is the python file put into a PATH, where you can execute without cd to the path, and add the 'python' header.

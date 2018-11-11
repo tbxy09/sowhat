@@ -1,12 +1,17 @@
 # from fabric import Connection
 # from fabric import task
 # c=Connection('tbxy09@localhost')
-from fabric.api import cd, lcd, env, local, parallel, serial
-from fabric.api import put, run, settings, sudo, prefix
-from fabric.operations import prompt
+# from fabric.api import cd, lcd, env, local, parallel, serial
+import logging
+# logging.basicConfig(level=logging.DEBUG)
+
+# from fabric.api import cd, lcd, env, local,serial
+# from fabric.api import put, run, settings, sudo, prefix
+# from fabric.operations import prompt
+from fabric import task,Connection
 from fabric.contrib import django
-from fabric.contrib import files
-from fabric.state import connections
+# from fabric.contrib import files
+# from fabric.state import connections
 # from fabric.colors import red, green, blue, cyan, magenta, white, yellow
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
@@ -34,10 +39,12 @@ except ImportError:
 # = DEFAULTS =
 # ============
 
-env.hosts = ['tbxy09@localhost']
-# env.SECRETS_PATH=
-env.SECRETS_PATH = '/srv/sowhat'
-env.app_directory='/opt/playground/sowhat'
+# env.hosts = ['tbxy09@localhost']
+# # env.SECRETS_PATH=
+# env.SECRETS_PATH = '/srv/sowhat'
+# env.app_directory='/opt/playground/sowhat'
+
+c=Connection('tbxy09@localhost')
 
 # def setup_hosts():
 #     put(os.path.join(env.SECRETS_PATH, 'configs/hosts'), '/etc/hosts', use_sudo=True)
@@ -94,17 +101,18 @@ def deploy():
     with cd(env.app_directory):
         pass
 
-# @parallel
-def setup_hosts():
-    put(os.path.join(env.SECRETS_PATH, 'configs/hosts'), '/etc/hosts', use_sudo=True)
+# # @parallel
+# def setup_hosts():
+#     put(os.path.join(env.SECRETS_PATH, 'configs/hosts'), '/etc/hosts', use_sudo=True)
     # sudo('echo "\n\n127.0.0.1   `hostname`" | sudo tee -a /etc/hosts')
 
 def get_ip():
-    run('curl ipinfo.io/ip')
+    # run('curl ipinfo.io/ip')
+    run('curl www.baidu.com; bin/sleep 1')
     # put(os.path.join(env.SECRETS_PATH, 'configs/hosts'), '/etc/hosts', use_sudo=True)
     # sudo('echo "\n\n127.0.0.1   `hostname`" | sudo tee -a /etc/hosts')
-
-def setup_tencent_instance():
+@task
+def setup_tencent_instance(c):
     from tencentcloud.common import credential
     cred = credential.Credential(
                                  django_settings.TC_SECRET_ID,
@@ -113,8 +121,8 @@ def setup_tencent_instance():
                                  # os.getenv('TENCENTCLOUD_SECRET_KEY')
                                 )
     # return a instance
-    # instance=describeIns(cred)
-    instance = updataIngress(cred)
+    instance=describeIns(cred)
+    # instance = updataIngress(cred)
 
     # adding to the host list,this is the ip address
     # host = instance.public_dns_name
@@ -168,9 +176,10 @@ TENCENTCLOUD_SECRET_KEY = os.getenv("TENCENTCLOUD_SECRET_KEY")
 
 if django_settings:
     try:
-        ACCESS_KEY  = django_settings.S3_ACCESS_KEY
-        SECRET      = django_settings.S3_SECRET
-        BUCKET_NAME = django_settings.S3_BACKUP_BUCKET  # Note that you need to create this bucket first
+        ACCESS_KEY  = django_settings.TC_SECRET_KEY
+        SECRET      = django_settings.TC_SECRET_KEY
+        SECRET      = django_settings.TC_SECRET_ID
+        # BUCKET_NAME = django_settings.S3_BACKUP_BUCKET  # Note that you need to create this bucket first
     except:
         print( " ---> You need to fix django's settings. Enter python and type `import settings`." )
 
@@ -205,3 +214,20 @@ def delete_all_backups():
     for i, key in enumerate(bucket.get_all_keys()):
         print("deleting %s" .format(key.name))
         key.delete()
+
+# @task
+def custom_runner(command):
+    """Runs command with custom key_filename"""
+    with settings(warn_only=True, key_filename=r"~\.ssh\id_rsa.pub"):
+        result = run(command, timeout=5)
+    return result
+
+@task
+def xy(command):
+    """Runs command with custom key_filename"""
+    with settings(warn_only=True, key_filename=r"~\.ssh\id_rsa.pub"):
+        result = run(command, timeout=5)
+    return result
+# result = execute(custom_runner,"uname -a",host="tbxy09@localhost")
+
+
