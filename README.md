@@ -121,7 +121,8 @@ the right now frame work, fab + tencent_cloud_api+aliyun_cloud_api
 
 but keep a stable, error traceable,is the main requirement
 
-[连接侧漏](https://github.com/alibaba/druid/wiki/%E8%BF%9E%E6%8E%A5%E6%B3%84%E6%BC%8F%E7%9B%91%E6%B5%db)
+<!-- [连接侧漏](https://github.com/alibaba/druid/wiki/%E8%BF%9E%E6%8E%A5%E6%B3%84%E6%BC%8F%E7%9B%91%E6%B5%db) -->
+[连接泄露](https://github.com/alibaba/druid/wiki/连接泄露监测)
 
 ## issueTracking
 
@@ -150,3 +151,12 @@ and if you want to print out to webpage, and you can add the following line
 	python test_api.py|string_io 0|python -m json.tool|aha > ls_with_color.html
 
 string_io is the python file put into a PATH, where you can execute without cd to the path, and add the 'python' header.
+
+
+## the cloud api almost finish, I am wondering
+
+- pretty print the info
+I have two choice here, I can throw the json file to the web, or give a very pretty print in the shell
+
+- add new ip to the policy
+

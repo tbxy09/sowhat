@@ -1,0 +1,23 @@
+	https://vpc.tencentcloudapi.com/?Action=ModifySecurityGroupPolicies
+	&Version=2017-03-12
+	&SecurityGroupId=sg-ohuuioma
+	&SecurityGroupPolicySet.Egress.0.ServiceTemplate.ServiceId=ppm-f5n1f8da
+	&SecurityGroupPolicySet.Egress.0.AddressTemplate.AddressId=ipmg-2uw6ujo6
+	&SecurityGroupPolicySet.Egress.0.Action=accept
+	&SecurityGroupPolicySet.Egress.0.PolicyDescription=TestPolicy
+	&SecurityGroupPolicySet.Ingress.0.ServiceTemplate.ServiceId=ppm-f5n1f8da
+	&SecurityGroupPolicySet.Ingress.0.AddressTemplate.AddressId=ipmg-2uw6ujo6
+	&SecurityGroupPolicySet.Ingress.0.Action=accept
+	&SecurityGroupPolicySet.Ingress.0.PolicyDescription=Test
+	&<公共请求参数>
+
+	https://vpc.tencentcloudapi.com/?Action=ReplaceSecurityGroupPolicy
+	&Version=2017-03-12
+	&SecurityGroupId=sg-ohuuioma
+	&SecurityGroupPolicySet.Version=20
+	&SecurityGroupPolicySet.Egress.0.PolicyIndex=2
+	&SecurityGroupPolicySet.Egress.0.ServiceTemplate.ServiceId=ppm-f5n1f8da
+	&SecurityGroupPolicySet.Egress.0.AddressTemplate.AddressId=ipmg-2uw6ujo6
+	&SecurityGroupPolicySet.Egress.0.Action=accept
+	&SecurityGroupPolicySet.Egress.0.PolicyDescription=TestPolicy
+	&<公共请求参数>

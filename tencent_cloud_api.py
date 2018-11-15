@@ -8,6 +8,10 @@ from tencentcloud.vpc.v20170312 import  models as vpc_models
 from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
 
+from sowhat.policyset import params
+import os
+from util import apiinfo,apidebug
+
 def new_cvm_client(cred,method):
 
         httpProfile = HttpProfile()
@@ -58,7 +62,11 @@ def describeIns(cred):
 
         resp = client.DescribeInstances(req)
 
-        print(resp.to_json_string())
+        if os.getenv('API_JSON_INFO'):
+            apiinfo("Json Response")
+            print(resp.to_json_string())
+        # return(resp.to_json_string())
+        return(resp)
 
     except TencentCloudSDKException as err:
         # print(err)
@@ -71,7 +79,7 @@ def getPolicyset(cred):
 
         req=vpc_models.DescribeSecurityGroupPoliciesRequest()
         req.SecurityGroupId = "sg-hc7qsa1z"
-        print(req.to_json_string())
+        # print(req.to_json_string())
 
         # respFilter = vpc_models.Filter()
         # respFilter.Name = "zone"
@@ -81,15 +89,17 @@ def getPolicyset(cred):
 
         resp = client.DescribeSecurityGroupPolicies(req)
 
+        # print(resp)
 
-        print(resp)
+        return resp
+
 
     except TencentCloudSDKException as err:
         print(err)
 
-def updataIngress(cred):
+def RequestIngress(cred):
     try:
-        client=new_vpc_client(cred=cred,method="GET")
+        client=new_vpc_client(cred=cred,method="POST")
 
         req=vpc_models.ModifySecurityGroupPoliciesRequest()
 
@@ -115,10 +125,40 @@ def updataIngress(cred):
         # resp = client.DescribeSecurityGroupPolicies(req)
 
         resp = client.ModifySecurityGroupPolicies(req)
-        print(resp)
+        if os.getenv('API_JSON_INFO')=="1":
+            resp = client.ModifySecurityGroupPolicies(req)
+            apiinfo(resp.to_json_string())
 
     except TencentCloudSDKException as err:
         print(err)
 
 
+def updateIngress(cred,host_ip):
 
+    apidebug(host_ip.decode())
+
+    try:
+        client=new_vpc_client(cred=cred,method="POST")
+        httpProfile = HttpProfile()
+        httpProfile.endpoint = "vpc.ap-guangzhou.tencentcloudapi.com"
+
+        clientProfile = ClientProfile()
+        clientProfile.httpProfile = httpProfile
+        client = vpc_client.VpcClient(cred, "ap-guangzhou", clientProfile)
+
+        req = vpc_models.ReplaceSecurityGroupPolicyRequest()
+        req.from_json_string(params)
+
+        req.SecurityGroupPolicySet.Ingress[0].CidrBlock=str(host_ip.decode())
+        # req.SecurityGroupPolicySet.Version='11'
+
+        resp = client.ReplaceSecurityGroupPolicy(req)
+
+        if os.getenv('API_JSON_INFO')=="1":
+            # resp = client.ReplaceSecurityGroupPolicy(req)
+            apiinfo(resp.to_json_string())
+
+        return resp
+
+    except TencentCloudSDKException as err:
+        print(err)

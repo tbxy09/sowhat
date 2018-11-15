@@ -1,2 +1,11 @@
 local_settings.py
 local_setting.py
+
+__pycache__/aliyun_cloud_api.cpython-35.pyc
+__pycache__/fabfile.cpython-35.pyc
+.pdbrc
+__pycache__/local_settings.cpython-35.pyc
+__pycache__/settings.cpython-35.pyc
+__pycache__/tencent_cloud_api.cpython-35.pyc
+__pycache__/util.cpython-35.pyc
+cache_ip

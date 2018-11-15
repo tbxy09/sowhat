@@ -8,7 +8,8 @@ import logging
 # from fabric.api import cd, lcd, env, local,serial
 # from fabric.api import put, run, settings, sudo, prefix
 # from fabric.operations import prompt
-from fabric import task,Connection
+# from fabric import task,Connection
+from fabric import task
 from fabric.contrib import django
 # from fabric.contrib import files
 # from fabric.state import connections
@@ -44,7 +45,7 @@ except ImportError:
 # env.SECRETS_PATH = '/srv/sowhat'
 # env.app_directory='/opt/playground/sowhat'
 
-c=Connection('tbxy09@localhost')
+# c=Connection('tbxy09@localhost')
 
 # def setup_hosts():
 #     put(os.path.join(env.SECRETS_PATH, 'configs/hosts'), '/etc/hosts', use_sudo=True)
@@ -85,13 +86,13 @@ def setup_launch_git():
     with cd(env.app_directory):
         run('./setup_sowhat.sh')
 
-# @task
-def setup_regular_task():
+@task
+def setup_regular_task(c):
     # print('running the setup_regular_task')
     # run('cd /opt/playground/sowhat')
     # with cd('/opt/playground/sowhat'):
     with cd(env.app_directory):
-        run('cp /root/vimwiki/diary/Makefile Makefile')
+        c.run('cp /root/vimwiki/diary/Makefile Makefile')
 
 # def get_latest_commit():
 #     return urlopen(env.commits_server).read()
@@ -106,13 +107,28 @@ def deploy():
 #     put(os.path.join(env.SECRETS_PATH, 'configs/hosts'), '/etc/hosts', use_sudo=True)
     # sudo('echo "\n\n127.0.0.1   `hostname`" | sudo tee -a /etc/hosts')
 
+# @task
 def get_ip():
-    # run('curl ipinfo.io/ip')
-    run('curl www.baidu.com; bin/sleep 1')
+    run('curl ipinfo.io/ip')
+    # run('curl www.baidu.com; bin/sleep 1')
     # put(os.path.join(env.SECRETS_PATH, 'configs/hosts'), '/etc/hosts', use_sudo=True)
     # sudo('echo "\n\n127.0.0.1   `hostname`" | sudo tee -a /etc/hosts')
-@task
-def setup_tencent_instance(c):
+
+# @task
+def des_aliyunIns(c):
+
+    from aliyun_cloud_api import describeIns,describeSec,modifySec
+
+    cred=[os.getenv('ALIYUN_SECRET_ID'),
+          os.getenv('ALIYUN_SECRET_KEY')]
+    print(cred)
+
+    # instance=describeIns(*cred)
+    describeSec(*cred)
+    # modifySec(*cred)
+
+# @task
+def des_tcIns(c):
     from tencentcloud.common import credential
     cred = credential.Credential(
                                  django_settings.TC_SECRET_ID,
@@ -121,13 +137,12 @@ def setup_tencent_instance(c):
                                  # os.getenv('TENCENTCLOUD_SECRET_KEY')
                                 )
     # return a instance
-    instance=describeIns(cred)
+    describeIns(cred)
     # instance = updataIngress(cred)
 
     # adding to the host list,this is the ip address
     # host = instance.public_dns_name
     # env.host_string = host
-    print(instance)
 
 def setup_ec2():
     AMI_NAME = 'ami-834cf1ea'       # Ubuntu 64-bit 12.04 LTS
